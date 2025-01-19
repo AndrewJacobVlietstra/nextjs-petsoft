@@ -1,5 +1,7 @@
 import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HomePage() {
 	return (
@@ -24,9 +26,14 @@ export default function HomePage() {
 					access for $299.
 				</p>
 
-				<div className="mt-10">
-					<button>Sign up</button>
-					<button>Log in</button>
+				<div className="mt-10 space-x-3">
+					<Button asChild>
+						<Link href="/signup">Get started</Link>
+					</Button>
+
+					<Button variant="secondary" asChild>
+						<Link href="/login">Log in</Link>
+					</Button>
 				</div>
 			</div>
 		</main>
