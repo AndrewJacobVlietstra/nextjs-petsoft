@@ -11,7 +11,7 @@ export default function Layout({ children }: LayoutProps) {
 		<>
 			<BackgroundPattern />
 
-			<div className="max-w-[1050px] mx-auto px-4">
+			<div className="flex flex-col max-w-[1050px] mx-auto min-h-screen px-4">
 				<AppHeader />
 				{children}
 				<AppFooter />
