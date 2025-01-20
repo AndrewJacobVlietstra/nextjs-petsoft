@@ -12,7 +12,7 @@ type LayoutProps = {
 export default async function Layout({ children }: LayoutProps) {
 	const response = await fetch(BASE_API_URL);
 	if (!response.ok) {
-		throw new Error("Could not fetch pets");
+		throw new Error("Could not fetch pets data");
 	}
 	const petsData: Pet[] = await response.json();
 
