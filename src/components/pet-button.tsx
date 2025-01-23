@@ -24,7 +24,7 @@ export default function PetButton({
 	actionType,
 	onClick,
 }: PetButtonProps) {
-	const [isFormOpen, setIsFormOpen] = useState(false);
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	if (actionType === "checkout") {
 		return (
@@ -40,7 +40,7 @@ export default function PetButton({
 	}
 
 	return (
-		<Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogTrigger asChild>
 				{actionType === "add" ? (
 					<Button size="icon" aria-label="Add a pet" title="Add a pet">
@@ -57,7 +57,7 @@ export default function PetButton({
 				)}
 			</DialogTrigger>
 
-			<DialogContent>
+			<DialogContent aria-describedby="Pop up form for adding/editing pet">
 				<DialogHeader>
 					<DialogTitle className="pb-2">
 						{actionType === "add" ? "Add New Pet" : "Edit Pet Info"}
@@ -66,7 +66,7 @@ export default function PetButton({
 
 				<PetForm
 					actionType={actionType}
-					onFormSubmit={() => setIsFormOpen(false)}
+					onFormSubmit={() => setIsDialogOpen(false)}
 				/>
 			</DialogContent>
 		</Dialog>

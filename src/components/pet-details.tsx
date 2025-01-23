@@ -46,6 +46,7 @@ function TopBar({ pet }: Props) {
 
 			<div className="flex ml-auto space-x-3">
 				<PetButton actionType="edit">Edit</PetButton>
+
 				<PetButton
 					actionType="checkout"
 					onClick={() => handleCheckoutPet(pet.id)}

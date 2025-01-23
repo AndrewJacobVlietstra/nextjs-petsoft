@@ -12,10 +12,12 @@ type PetContext = {
 	pets: Pet[];
 	selectedPet: Pet | undefined;
 	selectedPetId: string | null;
+	selectedPetIndex: number;
 	numberOfPets: number;
 	handleChangeSelectedPetID: (id: string) => void;
 	handleCheckoutPet: (id: string) => void;
 	handleAddPet: (newPet: Omit<Pet, "id">) => void;
+	handleEditPet: (id: string, editedPet: Omit<Pet, "id">) => void;
 };
 
 export const PetContext = createContext<PetContext | null>(null);
@@ -30,6 +32,7 @@ export default function PetContextProvider({
 
 	// Derived state
 	const selectedPet = pets.find((pet) => pet.id === selectedPetId);
+	const selectedPetIndex = pets.findIndex((pet) => pet.id === selectedPetId);
 	const numberOfPets = pets.length;
 
 	// Event handlers / actions
@@ -46,16 +49,32 @@ export default function PetContextProvider({
 		setPets((prev) => [...prev, { ...newPet, id: Date.now().toString() }]);
 	};
 
+	const handleEditPet = (id: string, editedPet: Omit<Pet, "id">) => {
+		setPets((prev) =>
+			prev.map((pet) => {
+				if (pet.id === id) {
+					return {
+						id,
+						...editedPet,
+					};
+				}
+				return pet;
+			})
+		);
+	};
+
 	return (
 		<PetContext.Provider
 			value={{
 				pets,
 				selectedPet,
 				selectedPetId,
+				selectedPetIndex,
 				numberOfPets,
 				handleChangeSelectedPetID,
 				handleCheckoutPet,
 				handleAddPet,
+				handleEditPet,
 			}}
 		>
 			{children}
