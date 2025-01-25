@@ -16,12 +16,14 @@ import { useState } from "react";
 type PetButtonProps = {
 	children: React.ReactNode;
 	actionType: actionType;
+	isPending?: boolean;
 	onClick?: () => void;
 };
 
 export default function PetButton({
 	children,
 	actionType,
+	isPending,
 	onClick,
 }: PetButtonProps) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -33,6 +35,7 @@ export default function PetButton({
 				aria-label="Checkout a pet"
 				title="Remove pet from system"
 				onClick={onClick}
+				disabled={isPending}
 			>
 				{children}
 			</Button>
