@@ -1,22 +1,16 @@
 "use server";
 
-import { PLACEHOLDER_IMG } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { PetFormData } from "@/lib/types";
 
-export async function addPet(formData: FormData) {
+export async function addPet(petData: PetFormData) {
 	try {
 		await sleep();
 
 		await prisma.pet.create({
-			data: {
-				name: formData.get("name") as string,
-				ownerName: formData.get("ownerName") as string,
-				age: parseInt(formData.get("age") as string),
-				imageUrl: (formData.get("imageUrl") as string) || PLACEHOLDER_IMG,
-				notes: formData.get("notes") as string,
-			},
+			data: petData,
 		});
 	} catch (error) {
 		return {
@@ -27,7 +21,7 @@ export async function addPet(formData: FormData) {
 	revalidatePath("/app", "layout");
 }
 
-export async function editPet(petId: string, formData: FormData) {
+export async function editPet(petId: string, petData: PetFormData) {
 	try {
 		await sleep();
 
@@ -35,13 +29,7 @@ export async function editPet(petId: string, formData: FormData) {
 			where: {
 				id: petId,
 			},
-			data: {
-				name: formData.get("name") as string,
-				ownerName: formData.get("ownerName") as string,
-				age: parseInt(formData.get("age") as string),
-				imageUrl: (formData.get("imageUrl") as string) || PLACEHOLDER_IMG,
-				notes: formData.get("notes") as string,
-			},
+			data: petData,
 		});
 	} catch (error) {
 		return {

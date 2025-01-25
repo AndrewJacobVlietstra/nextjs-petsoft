@@ -7,4 +7,6 @@ export type Pet = {
 	notes: string;
 };
 
+export type PetFormData = Omit<Pet, "id">;
+
 export type actionType = "add" | "edit" | "checkout";

@@ -5,39 +5,38 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
-import { addPet, editPet } from "@/actions/actions";
 import PetFormBtn from "./pet-form-btn";
-import { toast } from "sonner";
+import { PLACEHOLDER_IMG } from "@/lib/constants";
 
 export type remainingActions = Exclude<actionType, "checkout">;
 
 type PetFormProps = {
 	actionType: remainingActions;
-	onFormSubmit: () => void;
+	closeDialog: () => void;
 };
 
-export default function PetForm({ actionType, onFormSubmit }: PetFormProps) {
-	const { selectedPet, selectedPetId } = usePetContext();
+export default function PetForm({ actionType, closeDialog }: PetFormProps) {
+	const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
 
 	return (
 		<form
 			action={async (formData) => {
+				const petData = {
+					name: formData.get("name") as string,
+					ownerName: formData.get("ownerName") as string,
+					age: parseInt(formData.get("age") as string),
+					imageUrl: (formData.get("imageUrl") as string) || PLACEHOLDER_IMG,
+					notes: formData.get("notes") as string,
+				};
+
 				if (actionType === "add") {
-					const error = await addPet(formData);
-					if (error) {
-						toast.warning(error.message);
-						return;
-					}
+					await handleAddPet(petData);
 				}
 				if (actionType === "edit") {
-					const error = await editPet(selectedPetId!, formData);
-					if (error) {
-						toast.warning(error.message);
-						return;
-					}
+					await handleEditPet(selectedPet!.id, petData);
 				}
-				onFormSubmit();
 			}}
+			onSubmit={() => closeDialog()}
 			className="flex flex-col gap-y-4"
 		>
 			<div className="space-y-1">
