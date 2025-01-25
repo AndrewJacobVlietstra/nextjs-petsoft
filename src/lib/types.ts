@@ -10,3 +10,5 @@ export type Pet = {
 export type PetFormData = Omit<Pet, "id">;
 
 export type actionType = "add" | "edit" | "checkout";
+
+export type actionError = { message: string } | undefined;
