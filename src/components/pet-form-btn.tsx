@@ -1,4 +1,3 @@
-import { useFormStatus } from "react-dom";
 import { remainingActions } from "./pet-form";
 import { Button } from "./ui/button";
 
@@ -7,7 +6,6 @@ type PetFormBtnProps = {
 };
 
 export default function PetFormBtn({ actionType }: PetFormBtnProps) {
-	const { pending } = useFormStatus();
 	const btnData = actionType === "add" ? "Submit new pet" : "Save pet info";
 
 	return (
@@ -16,9 +14,8 @@ export default function PetFormBtn({ actionType }: PetFormBtnProps) {
 			type="submit"
 			aria-label={btnData}
 			title={btnData}
-			disabled={pending}
 		>
-			{pending ? "Loading..." : actionType === "add" ? "Submit" : "Save"}
+			{actionType === "add" ? "Submit" : "Save"}
 		</Button>
 	);
 }

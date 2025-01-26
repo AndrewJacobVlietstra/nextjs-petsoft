@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
-import { PetFormData } from "@/lib/types";
+import { PetId, PetFormData } from "@/lib/types";
 
 export async function addPet(petData: PetFormData) {
 	try {
@@ -21,7 +21,7 @@ export async function addPet(petData: PetFormData) {
 	revalidatePath("/app", "layout");
 }
 
-export async function editPet(petId: string, petData: PetFormData) {
+export async function editPet(petId: PetId, petData: PetFormData) {
 	try {
 		await sleep();
 
@@ -40,7 +40,7 @@ export async function editPet(petId: string, petData: PetFormData) {
 	revalidatePath("/app", "layout");
 }
 
-export async function deletePet(petId: string) {
+export async function deletePet(petId: PetId) {
 	try {
 		await sleep();
 

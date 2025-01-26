@@ -12,8 +12,6 @@ export const sleep = async (delay = 1000) => {
 };
 
 export const handleActionError = (error: actionError) => {
-	if (!error) return;
-
 	if (error) {
 		toast.warning(error.message);
 		return;

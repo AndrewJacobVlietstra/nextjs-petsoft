@@ -1,13 +1,10 @@
-export type Pet = {
-	id: string;
-	name: string;
-	ownerName: string;
-	imageUrl: string;
-	age: number;
-	notes: string;
-};
+import { Pet as PetType } from "@prisma/client";
 
-export type PetFormData = Omit<Pet, "id">;
+export type Pet = PetType;
+
+export type PetId = Pet["id"];
+
+export type PetFormData = Omit<Pet, "id" | "createdAt" | "updatedAt">;
 
 export type actionType = "add" | "edit" | "checkout";
 
