@@ -5,8 +5,9 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
-import { PLACEHOLDER_IMG } from "@/lib/constants";
 import { useForm } from "react-hook-form";
+import { petFormDataSchema } from "@/lib/zod-schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import PetFormBtn from "./pet-form-btn";
 
 export type remainingActions = Exclude<actionType, "checkout">;
@@ -21,24 +22,28 @@ export default function PetForm({ actionType, closeDialog }: PetFormProps) {
 	const {
 		register,
 		trigger,
+		getValues,
 		formState: { errors },
-	} = useForm<PetFormData>();
+	} = useForm<PetFormData>({
+		resolver: zodResolver(petFormDataSchema),
+		defaultValues: {
+			name: actionType === "edit" ? selectedPet?.name : "",
+			ownerName: actionType === "edit" ? selectedPet?.ownerName : "",
+			age: actionType === "edit" ? selectedPet?.age : "",
+			imageUrl: actionType === "edit" ? selectedPet?.imageUrl : "",
+			notes: actionType === "edit" ? selectedPet?.notes : "",
+		},
+	});
 
 	return (
 		<form
-			action={async (formData) => {
-				const result = await trigger();
+			action={async () => {
+				const result = await trigger(); // Checking form data from client against zod schema
 				if (!result) return;
 
 				closeDialog();
 
-				const petData = {
-					name: formData.get("name") as string,
-					ownerName: formData.get("ownerName") as string,
-					age: parseInt(formData.get("age") as string),
-					imageUrl: (formData.get("imageUrl") as string) || PLACEHOLDER_IMG,
-					notes: formData.get("notes") as string,
-				};
+				const petData = getValues();
 
 				if (actionType === "add") {
 					await handleAddPet(petData);
@@ -51,31 +56,13 @@ export default function PetForm({ actionType, closeDialog }: PetFormProps) {
 		>
 			<div className="space-y-1">
 				<Label htmlFor="name">Name</Label>
-				<Input
-					id="name"
-					{...register("name", {
-						required: "Name is required.",
-						maxLength: {
-							value: 30,
-							message: "Name has a maximum of 30 characters long.",
-						},
-					})}
-				/>
+				<Input id="name" {...register("name")} />
 				{errors.name && <p className="text-red-500">{errors.name.message}</p>}
 			</div>
 
 			<div className="space-y-1">
 				<Label htmlFor="ownerName">Owner Name</Label>
-				<Input
-					id="ownerName"
-					{...register("ownerName", {
-						required: "Owner Name is required.",
-						maxLength: {
-							value: 30,
-							message: "Owner Name has a maximum of 30 characters long.",
-						},
-					})}
-				/>
+				<Input id="ownerName" {...register("ownerName")} />
 				{errors.ownerName && (
 					<p className="text-red-500">{errors.ownerName.message}</p>
 				)}

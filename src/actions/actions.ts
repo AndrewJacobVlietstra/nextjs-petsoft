@@ -1,35 +1,45 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
-import { PetId, PetFormData } from "@/lib/types";
+import { petFormDataSchema } from "@/lib/zod-schemas";
+import { PetId } from "@/lib/types";
 
-export async function addPet(petData: PetFormData) {
+export async function addPet(petData: unknown) {
+	const parsedPet = petFormDataSchema.safeParse(petData);
+	if (!parsedPet.success) {
+		return {
+			message: "Invalid pet data.",
+		};
+	}
+
 	try {
-		await sleep();
-
 		await prisma.pet.create({
-			data: petData,
+			data: parsedPet.data,
 		});
 	} catch (error) {
 		return {
-			message: "Something went wrong! Could not add pet!",
+			message: `Something went wrong! Could not add pet!`,
 		};
 	}
 
 	revalidatePath("/app", "layout");
 }
 
-export async function editPet(petId: PetId, petData: PetFormData) {
-	try {
-		await sleep();
+export async function editPet(petId: PetId, petData: unknown) {
+	const parsedPet = petFormDataSchema.safeParse(petData);
+	if (!parsedPet.success) {
+		return {
+			message: "Invalid pet data.",
+		};
+	}
 
+	try {
 		await prisma.pet.update({
 			where: {
 				id: petId,
 			},
-			data: petData,
+			data: parsedPet.data,
 		});
 	} catch (error) {
 		return {
@@ -42,8 +52,6 @@ export async function editPet(petId: PetId, petData: PetFormData) {
 
 export async function deletePet(petId: PetId) {
 	try {
-		await sleep();
-
 		await prisma.pet.delete({
 			where: {
 				id: petId,
