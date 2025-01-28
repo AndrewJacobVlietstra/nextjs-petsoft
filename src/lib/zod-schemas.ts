@@ -1,18 +1,20 @@
 import { z } from "zod";
 import { PLACEHOLDER_IMG } from "./constants";
 
+export const petIdSchema = z.string().trim().cuid();
+
 export const petFormDataSchema = z
 	.object({
 		name: z
 			.string()
 			.trim()
 			.min(1, { message: "Name is required." })
-			.max(30, { message: "Name has 30 max character limit." }),
+			.max(20, { message: "Name has 20 max character limit." }),
 		ownerName: z
 			.string()
 			.trim()
 			.min(1, { message: "Owner Name is required." })
-			.max(30, { message: "Owner Name has 30 max character limit." }),
+			.max(20, { message: "Owner Name has 20 max character limit." }),
 		age: z.coerce
 			.number({ invalid_type_error: "Must be a number." })
 			.int({ message: "Age must be an integer / whole number." })
