@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function AuthForm() {
 	const activePath = usePathname();
