@@ -1,13 +1,13 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { AuthFormTypes } from "@/lib/types";
 
-export default function AuthForm() {
-	const activePath = usePathname();
+type AuthFormProps = {
+	type: AuthFormTypes;
+};
 
+export default function AuthForm({ type }: AuthFormProps) {
 	return (
 		<form className="flex flex-col gap-y-5">
 			<div>
@@ -20,7 +20,7 @@ export default function AuthForm() {
 				<Input type="password" id="password" />
 			</div>
 
-			<Button>{activePath === "/login" ? "Log In" : "Sign Up"}</Button>
+			<Button>{type === "login" ? "Log In" : "Sign Up"}</Button>
 		</form>
 	);
 }

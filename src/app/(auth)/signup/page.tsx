@@ -7,7 +7,7 @@ export default function SignupPage() {
 		<main className="flex flex-col justify-center items-center gap-y-4">
 			<H1>Sign Up</H1>
 
-			<AuthForm />
+			<AuthForm type="signup" />
 
 			<p>
 				Already have an account?{" "}

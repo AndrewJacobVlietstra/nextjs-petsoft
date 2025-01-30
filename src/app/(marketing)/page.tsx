@@ -5,15 +5,8 @@ import Link from "next/link";
 
 export default function HomePage() {
 	return (
-		<main className="flex flex-col xl:flex-row items-center justify-center gap-10 bg-[#5DC9A8] min-h-screen">
-			<Image
-				src="https://bytegrad.com/course-assets/react-nextjs/petsoft-preview.png"
-				alt="Preview of Petsoft"
-				width={519}
-				height={472}
-			/>
-
-			<div>
+		<main className="min-h-screen flex flex-col xl:flex-row items-center justify-center gap-10 px-6 bg-[#5DC9A8]">
+			<div className="max-w-[530px] xl:max-w-full">
 				<Logo />
 
 				<h1 className="text-5xl font-semibold my-6 max-w-[500px]">
@@ -36,6 +29,13 @@ export default function HomePage() {
 					</Button>
 				</div>
 			</div>
+
+			<Image
+				src="https://bytegrad.com/course-assets/react-nextjs/petsoft-preview.png"
+				alt="Preview of Petsoft"
+				width={519}
+				height={472}
+			/>
 		</main>
 	);
 }

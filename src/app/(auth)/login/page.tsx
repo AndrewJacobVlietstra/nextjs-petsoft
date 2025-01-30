@@ -7,7 +7,7 @@ export default function LoginPage() {
 		<main className="flex flex-col justify-center items-center gap-y-4">
 			<H1>Log In</H1>
 
-			<AuthForm />
+			<AuthForm type="login" />
 
 			<p>
 				No account yet?{" "}
