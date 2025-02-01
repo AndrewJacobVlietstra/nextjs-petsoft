@@ -13,12 +13,12 @@ export default function AuthForm({ type }: AuthFormProps) {
 		<form action={login} className="flex flex-col gap-y-6">
 			<div>
 				<Label htmlFor="email">Email</Label>
-				<Input type="email" id="email" />
+				<Input type="email" id="email" name="email" />
 			</div>
 
 			<div>
 				<Label htmlFor="password">Password</Label>
-				<Input type="password" id="password" />
+				<Input type="password" id="password" name="password" />
 			</div>
 
 			<Button>{type === "login" ? "Log In" : "Sign Up"}</Button>

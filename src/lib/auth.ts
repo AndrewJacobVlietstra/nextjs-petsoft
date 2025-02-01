@@ -43,17 +43,29 @@ const config = {
 		}),
 	],
 	callbacks: {
-		authorized: ({ request }) => {
+		authorized: ({ request, auth }) => {
 			// runs on every request with middleware
+			const isLoggedIn = Boolean(auth?.user);
 			const isAccessingApp = request.nextUrl.pathname.includes("/app");
 
-			if (isAccessingApp) {
+			// If user is not logged in and trying to access app
+			if (!isLoggedIn && isAccessingApp) {
 				return false;
-			} else {
+			}
+			// If user is logged in and trying to access app
+			if (isLoggedIn && isAccessingApp) {
+				return true;
+			}
+			// If user is logged in and not trying to access app
+			if (isLoggedIn && !isAccessingApp) {
+				return Response.redirect(new URL("/app/dashboard", request.nextUrl));
+			}
+			// If user is not logged in and not trying to access app
+			if (!isLoggedIn && !isAccessingApp) {
 				return true;
 			}
 		},
 	},
 } satisfies NextAuthConfig;
 
-export const { auth, signIn } = NextAuth(config);
+export const { auth, signIn, signOut } = NextAuth(config);
