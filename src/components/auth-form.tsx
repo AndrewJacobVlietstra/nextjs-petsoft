@@ -2,6 +2,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { AuthFormTypes } from "@/lib/types";
+import { login } from "@/actions/actions";
 
 type AuthFormProps = {
 	type: AuthFormTypes;
@@ -9,7 +10,7 @@ type AuthFormProps = {
 
 export default function AuthForm({ type }: AuthFormProps) {
 	return (
-		<form className="flex flex-col gap-y-5">
+		<form action={login} className="flex flex-col gap-y-6">
 			<div>
 				<Label htmlFor="email">Email</Label>
 				<Input type="email" id="email" />
