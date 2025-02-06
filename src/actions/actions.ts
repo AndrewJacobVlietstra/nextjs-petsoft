@@ -3,7 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { petFormDataSchema, petIdSchema } from "@/lib/zod-schemas";
-import { signIn, signOut } from "@/lib/auth";
+import { auth, signIn, signOut } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
 // --- User Actions ---
@@ -35,6 +36,12 @@ export async function signup(formData: FormData) {
 
 //  --- Pet Actions ---
 export async function addPet(petData: unknown) {
+	const session = await auth();
+
+	if (!session?.user) {
+		return redirect("/login");
+	}
+
 	const parsedPet = petFormDataSchema.safeParse(petData);
 	if (!parsedPet.success) {
 		return {
@@ -44,7 +51,14 @@ export async function addPet(petData: unknown) {
 
 	try {
 		await prisma.pet.create({
-			data: parsedPet.data,
+			data: {
+				...parsedPet.data,
+				user: {
+					connect: {
+						id: session.user.id,
+					},
+				},
+			},
 		});
 	} catch (error) {
 		return {
