@@ -3,8 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { petFormDataSchema, petIdSchema } from "@/lib/zod-schemas";
-import { auth, signIn, signOut } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { signIn, signOut } from "@/lib/auth";
+import { checkAuth } from "@/lib/server-utils";
 import bcrypt from "bcryptjs";
 
 // --- User Actions ---
@@ -36,11 +36,7 @@ export async function signup(formData: FormData) {
 
 //  --- Pet Actions ---
 export async function addPet(petData: unknown) {
-	const session = await auth();
-
-	if (!session?.user) {
-		return redirect("/login");
-	}
+	const session = await checkAuth();
 
 	const parsedPet = petFormDataSchema.safeParse(petData);
 	if (!parsedPet.success) {
@@ -71,11 +67,7 @@ export async function addPet(petData: unknown) {
 
 export async function editPet(petId: unknown, petData: unknown) {
 	// Authentication check
-	const session = await auth();
-
-	if (!session?.user) {
-		return redirect("/login");
-	}
+	const session = await checkAuth();
 
 	// Validation
 	const parsedId = petIdSchema.safeParse(petId);
@@ -124,11 +116,7 @@ export async function editPet(petId: unknown, petData: unknown) {
 
 export async function deletePet(petId: unknown) {
 	// Authentication check
-	const session = await auth();
-
-	if (!session?.user) {
-		return redirect("/login");
-	}
+	const session = await checkAuth();
 
 	// Validation
 	const parsedId = petIdSchema.safeParse(petId);
