@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { petFormDataSchema, petIdSchema } from "@/lib/zod-schemas";
 import { signIn, signOut } from "@/lib/auth";
-import { checkAuth } from "@/lib/server-utils";
+import { checkAuth, getPetById } from "@/lib/server-utils";
 import bcrypt from "bcryptjs";
 
 // --- User Actions ---
@@ -36,8 +36,10 @@ export async function signup(formData: FormData) {
 
 //  --- Pet Actions ---
 export async function addPet(petData: unknown) {
+	// Authentication check
 	const session = await checkAuth();
 
+	// Validation
 	const parsedPet = petFormDataSchema.safeParse(petData);
 	if (!parsedPet.success) {
 		return {
@@ -45,6 +47,7 @@ export async function addPet(petData: unknown) {
 		};
 	}
 
+	// Database mutation
 	try {
 		await prisma.pet.create({
 			data: {
@@ -79,11 +82,7 @@ export async function editPet(petId: unknown, petData: unknown) {
 	}
 
 	// Authorization check
-	const pet = await prisma.pet.findUnique({
-		where: {
-			id: parsedId.data,
-		},
-	});
+	const pet = await getPetById(parsedId.data);
 
 	if (!pet) {
 		return {
@@ -127,11 +126,7 @@ export async function deletePet(petId: unknown) {
 	}
 
 	// Authorization check (user owns pet)
-	const pet = await prisma.pet.findUnique({
-		where: {
-			id: parsedId.data,
-		},
-	});
+	const pet = await getPetById(parsedId.data);
 
 	if (!pet) {
 		return {
