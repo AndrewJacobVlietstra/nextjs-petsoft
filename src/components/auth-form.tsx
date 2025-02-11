@@ -16,12 +16,12 @@ export default function AuthForm({ type }: AuthFormProps) {
 		>
 			<div>
 				<Label htmlFor="email">Email</Label>
-				<Input type="email" id="email" name="email" />
+				<Input type="email" id="email" name="email" required />
 			</div>
 
 			<div>
 				<Label htmlFor="password">Password</Label>
-				<Input type="password" id="password" name="password" />
+				<Input type="password" id="password" name="password" required />
 			</div>
 
 			<Button>{type === "login" ? "Log In" : "Sign Up"}</Button>

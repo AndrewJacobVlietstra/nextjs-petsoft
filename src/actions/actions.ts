@@ -2,15 +2,26 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { petFormDataSchema, petIdSchema } from "@/lib/zod-schemas";
+import {
+	authFormDataSchema,
+	petFormDataSchema,
+	petIdSchema,
+} from "@/lib/zod-schemas";
 import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetById } from "@/lib/server-utils";
 import bcrypt from "bcryptjs";
 
 // --- User Actions ---
-export async function login(formData: FormData) {
-	const authData = Object.fromEntries(formData.entries());
-	await signIn("credentials", authData);
+export async function login(formData: unknown) {
+	// Validate the input is of FormData shape
+	if (!(formData instanceof FormData)) {
+		return {
+			message: "Invalid credentials.",
+		};
+	}
+
+	// Call signIn method with FormData object
+	await signIn("credentials", formData);
 }
 
 export async function logout() {

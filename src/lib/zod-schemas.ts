@@ -38,3 +38,8 @@ export const petFormDataSchema = z
 	}));
 
 type zodPetFormData = z.infer<typeof petFormDataSchema>;
+
+export const authFormDataSchema = z.object({
+	email: z.string().email().max(100),
+	password: z.string().max(100),
+});
