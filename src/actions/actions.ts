@@ -28,9 +28,26 @@ export async function logout() {
 	await signOut({ redirect: true, redirectTo: "/" });
 }
 
-export async function signup(formData: FormData) {
-	const email = formData.get("email") as string;
-	const password = formData.get("password") as string;
+export async function signup(formData: unknown) {
+	// Validate the input is of FormData shape
+	if (!(formData instanceof FormData)) {
+		return {
+			message: "Invalid credentials.",
+		};
+	}
+
+	// Convert formData to plain object
+	const formDataEntries = Object.fromEntries(formData.entries());
+
+	// Zod validation
+	const parsedAuthData = authFormDataSchema.safeParse(formDataEntries);
+	if (!parsedAuthData.success) {
+		return {
+			message: "Invalid credentials.",
+		};
+	}
+
+	const { email, password } = parsedAuthData.data;
 	const hashedPassword = await bcrypt.hash(password, 10);
 
 	const newUser = {
