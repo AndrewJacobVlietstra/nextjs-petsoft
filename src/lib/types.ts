@@ -4,7 +4,10 @@ export type Pet = PetType;
 
 export type PetId = Pet["id"];
 
-export type PetFormData = Omit<Pet, "id" | "createdAt" | "updatedAt">;
+export type PetFormData = Omit<
+	Pet,
+	"id" | "userId" | "createdAt" | "updatedAt"
+>;
 
 export type actionType = "add" | "edit" | "checkout";
 

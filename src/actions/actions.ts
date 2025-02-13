@@ -1,5 +1,6 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import {
@@ -55,9 +56,22 @@ export async function signup(formData: unknown) {
 		hashedPassword,
 	};
 
-	await prisma.user.create({
-		data: newUser,
-	});
+	try {
+		await prisma.user.create({
+			data: newUser,
+		});
+	} catch (error) {
+		if (error instanceof Prisma.PrismaClientKnownRequestError) {
+			if (error.code === "P2002") {
+				return {
+					message: "Email already exists.",
+				};
+			}
+		}
+		return {
+			message: "Could not create user.",
+		};
+	}
 
 	await signIn("credentials", formData);
 }
