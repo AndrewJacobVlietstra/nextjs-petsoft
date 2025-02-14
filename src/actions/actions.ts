@@ -10,10 +10,11 @@ import {
 } from "@/lib/zod-schemas";
 import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetById } from "@/lib/server-utils";
+import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
 
 // --- User Actions ---
-export async function login(formData: unknown) {
+export async function login(prevState: unknown, formData: unknown) {
 	// Validate the input is of FormData shape
 	if (!(formData instanceof FormData)) {
 		return {
@@ -22,18 +23,38 @@ export async function login(formData: unknown) {
 	}
 
 	// Call signIn method with FormData object
-	await signIn("credentials", formData);
+	try {
+		// If signIn successful nextJS will run redirect automatically
+		await signIn("credentials", formData);
+	} catch (error) {
+		if (error instanceof AuthError) {
+			switch (error.type) {
+				case "CredentialsSignin": {
+					return {
+						message: "Invalid credentials.",
+					};
+				}
+				default: {
+					return {
+						message: "There was a problem signing in.",
+					};
+				}
+			}
+		}
+
+		throw error; // NextJS redirect throws error, so we need to re-throw it
+	}
 }
 
 export async function logout() {
 	await signOut({ redirect: true, redirectTo: "/" });
 }
 
-export async function signup(formData: unknown) {
+export async function signup(prevState: unknown, formData: unknown) {
 	// Validate the input is of FormData shape
 	if (!(formData instanceof FormData)) {
 		return {
-			message: "Invalid credentials.",
+			message: "Invalid form data.",
 		};
 	}
 

@@ -2,6 +2,7 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getUserByEmail } from "./server-utils";
 import { authFormDataSchema } from "./zod-schemas";
+import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
 const config = {
