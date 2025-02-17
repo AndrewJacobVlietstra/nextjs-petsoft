@@ -11,6 +11,7 @@ import {
 import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetById } from "@/lib/server-utils";
 import { AuthError } from "next-auth";
+import { sleep } from "@/lib/utils";
 import bcrypt from "bcryptjs";
 
 // --- User Actions ---
@@ -47,6 +48,7 @@ export async function login(prevState: unknown, formData: unknown) {
 }
 
 export async function logout() {
+	await sleep();
 	await signOut({ redirect: true, redirectTo: "/" });
 }
 
