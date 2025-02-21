@@ -12,7 +12,10 @@ import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetById } from "@/lib/server-utils";
 import { AuthError } from "next-auth";
 import { sleep } from "@/lib/utils";
+import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // --- User Actions ---
 export async function login(prevState: unknown, formData: unknown) {
@@ -219,4 +222,28 @@ export async function deletePet(petId: unknown) {
 	}
 
 	revalidatePath("/app", "layout");
+}
+
+// --- Payment Actions ---
+export async function createCheckoutSession() {
+	// authentication check
+	const session = await checkAuth();
+
+	console.log(session);
+
+	const checkoutSession = await stripe.checkout.sessions.create({
+		customer_email: session.user.email,
+		line_items: [
+			{
+				price: "price_1QtxztDPBqZp4T9wuac09AF9",
+				quantity: 1,
+			},
+		],
+		mode: "payment",
+		success_url: `${process.env.CANONICAL_URL}/payment?success=true`,
+		cancel_url: `${process.env.CANONICAL_URL}/payment?cancelled=true`,
+	});
+
+	// redirect user
+	redirect(checkoutSession.url);
 }
