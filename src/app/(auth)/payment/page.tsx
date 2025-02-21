@@ -1,13 +1,10 @@
-"use client";
-
 import H1 from "@/components/h1";
 import PaymentBtn from "@/components/payment-btn";
 
+type SearchParams = { [key: string]: string | string[] | undefined };
+
 type PaymentPageProps = {
-	searchParams: {
-		success: string;
-		cancelled: string;
-	};
+	searchParams: SearchParams;
 };
 
 export default function PaymentPage({ searchParams }: PaymentPageProps) {

@@ -52,26 +52,36 @@ const config = {
 			// runs on every request with middleware
 			const isLoggedIn = Boolean(auth?.user);
 			const isAccessingApp = request.nextUrl.pathname.includes("/app");
+			const hasAccess = auth?.user.hasAccess;
 
 			// If user is not logged in and trying to access app
 			if (!isLoggedIn && isAccessingApp) {
 				return false;
 			}
-			// If user is logged in and trying to access app
-			if (isLoggedIn && isAccessingApp) {
+
+			// If user is logged in and trying to access app and does not have access
+			if (isLoggedIn && isAccessingApp && !hasAccess) {
+				return Response.redirect(new URL("/payment", request.nextUrl));
+			}
+
+			// If user is logged in and trying to access app and bought lifetime access
+			if (isLoggedIn && isAccessingApp && hasAccess) {
 				return true;
 			}
+
 			// If user is logged in and not trying to access app
 			if (isLoggedIn && !isAccessingApp) {
 				if (
-					request.nextUrl.pathname.includes("/login") ||
-					request.nextUrl.pathname.includes("/signup")
+					(request.nextUrl.pathname.includes("/login") ||
+						request.nextUrl.pathname.includes("/signup")) &&
+					!hasAccess
 				) {
 					return Response.redirect(new URL("/payment", request.nextUrl));
 				}
 
 				return true;
 			}
+
 			// If user is not logged in and not trying to access app
 			if (!isLoggedIn && !isAccessingApp) {
 				return true;
@@ -81,6 +91,7 @@ const config = {
 			if (user) {
 				// On sign in
 				token.userId = user.id;
+				token.hasAccess = user.hasAccess;
 			}
 
 			return token;
@@ -88,6 +99,7 @@ const config = {
 		session: ({ session, token }) => {
 			if (session.user) {
 				session.user.id = token.userId;
+				session.user.hasAccess = token.hasAccess;
 			}
 
 			return session;
