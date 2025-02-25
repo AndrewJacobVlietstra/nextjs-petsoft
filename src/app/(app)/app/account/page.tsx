@@ -11,7 +11,12 @@ export default async function AccountPage() {
 			<H1 className="my-8 text-white">Your Account</H1>
 
 			<ContentBlock className="flex flex-col gap-3 justify-center items-center h-[500px]">
-				<p>Logged in as: {session?.user?.email}</p>
+				<p>
+					Logged in as:{" "}
+					<span className="font-semibold underline">
+						{session?.user?.email}
+					</span>
+				</p>
 
 				<SignOutButton />
 			</ContentBlock>
