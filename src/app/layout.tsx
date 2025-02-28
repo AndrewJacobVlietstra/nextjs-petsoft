@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +20,7 @@ export default function RootLayout({
 			<body
 				className={`${inter.className} text-sm min-h-screen text-zinc-900 bg-[#E5E8EC] `}
 			>
-				{children}
+				<SessionProvider>{children}</SessionProvider>
 			</body>
 		</html>
 	);
