@@ -18,7 +18,7 @@ export default function PaymentPage({ searchParams }: PaymentPageProps) {
 			{!searchParams.success && <PaymentBtn />}
 
 			{searchParams.success && (
-				<p className="text-lg font-semibold max-w-[300px] text-center text-green-500">
+				<p className="text-lg font-semibold text-center text-green-500">
 					Payment Successful! You now have lifetime access to PetSoft.
 				</p>
 			)}

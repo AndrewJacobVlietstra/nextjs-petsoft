@@ -87,11 +87,20 @@ const config = {
 				return true;
 			}
 		},
-		jwt: ({ token, user }) => {
+		jwt: async ({ token, user, trigger }) => {
 			if (user) {
 				// On sign in
 				token.userId = user.id;
+				token.email = user.email!;
 				token.hasAccess = user.hasAccess;
+			}
+
+			if (trigger === "update") {
+				// on every request
+				const user = await getUserByEmail(token.email);
+				if (user) {
+					token.hasAccess = user.hasAccess;
+				}
 			}
 
 			return token;
