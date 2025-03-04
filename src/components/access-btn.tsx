@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function AccessBtn() {
-	const { update } = useSession();
+	const { data: session, update, status } = useSession();
 	const router = useRouter();
 
 	return (
@@ -14,6 +14,7 @@ export default function AccessBtn() {
 				await update(true);
 				router.push("/app/dashboard");
 			}}
+			disabled={status === "loading" || session?.user.hasAccess}
 		>
 			Access PetSoft
 		</Button>
