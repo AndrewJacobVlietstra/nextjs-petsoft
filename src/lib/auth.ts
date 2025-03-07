@@ -69,12 +69,20 @@ const config = {
 				return true;
 			}
 
-			// If user is logged in and not trying to access app
-			if (isLoggedIn && !isAccessingApp) {
+			if (
+				isLoggedIn &&
+				hasAccess &&
+				(request.nextUrl.pathname.includes("/login") ||
+					request.nextUrl.pathname.includes("/signup"))
+			) {
+				return Response.redirect(new URL("/app/dashboard", request.nextUrl));
+			}
+
+			// If user is logged in and not trying to access app and no access
+			if (isLoggedIn && !isAccessingApp && !hasAccess) {
 				if (
-					(request.nextUrl.pathname.includes("/login") ||
-						request.nextUrl.pathname.includes("/signup")) &&
-					!hasAccess
+					request.nextUrl.pathname.includes("/login") ||
+					request.nextUrl.pathname.includes("/signup")
 				) {
 					return Response.redirect(new URL("/payment", request.nextUrl));
 				}
@@ -86,6 +94,8 @@ const config = {
 			if (!isLoggedIn && !isAccessingApp) {
 				return true;
 			}
+
+			return false;
 		},
 		jwt: async ({ token, user, trigger }) => {
 			if (user) {
